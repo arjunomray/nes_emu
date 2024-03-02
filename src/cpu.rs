@@ -21,7 +21,18 @@ impl CPU {
     }
 
     fn tax(&mut self) {
+
         self.register_x = self.register_a;
+        self.update_zero_and_negative_flags(self.register_x);
+    }
+
+    fn inx(&mut self) {
+        if self.register_x == 0xff {
+            self.register_x = 0;
+            self.update_zero_and_negative_flags(self.register_x);
+            return
+        }
+        self.register_x += 1;
         self.update_zero_and_negative_flags(self.register_x);
     }
 
@@ -54,6 +65,7 @@ impl CPU {
                 }
 
                 0xAA => self.tax(),
+                0xE8 => self.inx(),
 
                 0x00 => {
                     return;
